@@ -8,6 +8,7 @@ public class LeagueInvaders {
 public static void main(String[] args) {
 	LeagueInvaders vader = new LeagueInvaders();
 	vader.setup();
+
 }
 LeagueInvaders() {
 	frame = new JFrame();
@@ -18,7 +19,7 @@ void setup() {
 	frame.setSize(WIDTH,HEIGHT);
 	frame.setVisible(true);
 	frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-	
+	frame.addKeyListener(gamepanel);
 }
 }
 
