@@ -17,7 +17,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont;
 	Font titleFontEnter;
 	Timer frameDraw;
-	Rocketship rocketship = new Rocketship(250, 700, 50, 50);
+	Rocketship rocketship = new Rocketship(225, 698, 50, 50);
+	ObjectManager manager = new ObjectManager(rocketship);
 
 	GamePanel() {
 		titleFont = new Font("Arial", Font.PLAIN, 48);
@@ -43,6 +44,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void updateGameState() {
+		manager.update();
 	}
 
 	void updateEndState() {
@@ -63,12 +65,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
-		rocketship.draw(g);
+		manager.draw(g);
 	}
 
 	void drawEndState(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		g.setFont(titleFont);
+		g.setColor(Color.YELLOW);
+		g.drawString("Game Over", 120, 125);
+		g.setFont(titleFontEnter);
+		g.drawString("You killed Enemies", 160, 350);
+		g.setFont(titleFontEnter);
+		g.drawString("Press Enter to Restart", 150, 550);
 	}
 
 	@Override
@@ -106,7 +115,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					rocketship.up();
 				}
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				if (rocketship.y <= 0) {
+				if (rocketship.y >= 730) {
 				} else {
 					rocketship.down();
 				}
