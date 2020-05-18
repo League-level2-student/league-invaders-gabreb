@@ -8,9 +8,11 @@ public class Rocketship extends GameObject {
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;	
+	int xspeed;
+	int yspeed;
 	Rocketship(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		speed = 32;
+		speed = 10;
 		if (needImage) {
 		    loadImage ("rocket.png");
 		}
@@ -25,16 +27,16 @@ public class Rocketship extends GameObject {
 		}
 	}
 	 public void right() {
-	        x+=speed;
+	       xspeed = speed;
 	    }
 	 public void left() {
-	        x-=speed;
+	        xspeed = -speed;
 	    }
 	 public void down() {
-	        y+=speed;
+	        yspeed = speed;;
 	    }
 	 public void up() {
-	        y-=speed;
+	        yspeed = -speed;
 	    }
 	 void loadImage(String imageFile) {
 		    if (needImage) {
@@ -50,5 +52,9 @@ public class Rocketship extends GameObject {
 	 public Projectile getProjectile() {
 	        return new Projectile(x+width/2, y, 10, 10);
 	} 
-	
+	void update() {
+		y+=yspeed;
+		x+=xspeed;
+		super.update();
+	}
 }
