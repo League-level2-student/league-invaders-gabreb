@@ -121,13 +121,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				currentState = MENU;
 			} else {
 				currentState++;
+				if (currentState == GAME) {
+					startGame();
+				}
 				if (currentState==END) {
 					alienSpawn.stop();
 				}
 			}
 		}
-		if (currentState == GAME) {
-			startGame();
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				if (rocketship.y <= 0) {
 				} else {
@@ -146,7 +147,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				else {rocketship.right();}
 			}
 		}
-	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
