@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -23,8 +24,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	ObjectManager manager = new ObjectManager(rocketship);
 	public static BufferedImage image;
 	public static boolean needImage = true;
-	public static boolean gotImage = false;	
+	public static boolean gotImage = false;
 	Timer alienSpawn;
+
 	GamePanel() {
 		titleFont = new Font("Arial", Font.PLAIN, 48);
 		titleFontEnter = new Font("Arial", Font.PLAIN, 20);
@@ -37,7 +39,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		GamePanel Panel = new GamePanel();
 		if (currentState == MENU) {
 			drawMenuState(g);
-			rocketship.isActive=true;
+			rocketship.isActive = true;
 		} else if (currentState == GAME) {
 			drawGameState(g);
 		} else if (currentState == END) {
@@ -51,8 +53,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void updateGameState() {
 		manager.update();
-		if (rocketship.isActive==false) {
-			currentState=END;
+		if (rocketship.isActive == false) {
+			currentState = END;
+			rocketship = new Rocketship(225,668,50,50);
+			manager = new ObjectManager(rocketship); 
 		}
 	}
 
@@ -73,13 +77,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void drawGameState(Graphics g) {
 		if (needImage) {
-		    loadImage ("space.png");
+			loadImage("space.png");
 		}
 		if (gotImage) {
-			g.drawImage(image, 0, 0, LeagueInvaders.WIDTH,LeagueInvaders.HEIGHT, null);
+			g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
 		} else {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
 		}
 		manager.draw(g);
 		g.setColor(Color.RED);
@@ -94,7 +98,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.YELLOW);
 		g.drawString("Game Over", 120, 125);
 		g.setFont(titleFontEnter);
-		g.drawString("You killed Enemies", 160, 350);
+		g.drawString("You killed " + manager.getScore() + " enemies", 160, 350);
 		g.setFont(titleFontEnter);
 		g.drawString("Press Enter to Restart", 150, 550);
 	}
@@ -120,9 +124,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (currentState==GAME&& e.getKeyCode() == KeyEvent.VK_SPACE) {
+		if (currentState == GAME && e.getKeyCode() == KeyEvent.VK_SPACE) {
 			manager.addProjectile(rocketship.getProjectile());
 		}
+		if (currentState == MENU && e.getKeyCode() == KeyEvent.VK_SPACE) {
+			JOptionPane.showMessageDialog(null,
+					"Use the arrow keys to move. The space bar to fire. And try not to die!");
+		}
+
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (currentState == END) {
 				currentState = MENU;
@@ -131,50 +140,64 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				if (currentState == GAME) {
 					startGame();
 				}
-				if (currentState==END) {
+				else if (currentState == END) {
 					alienSpawn.stop();
+					rocketship = new Rocketship(225,668,50,50);
+					manager = new ObjectManager(rocketship); 
 				}
 			}
 		}
-			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				if (rocketship.y <= 0) {
-				} else {
-					rocketship.up();
-				}
-			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				if (rocketship.y >= 730) {
-				} else {
-					rocketship.down();
-				}
-			} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				if (rocketship.x <=25) {}
-				else {rocketship.left();}
-			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				if (rocketship.x >=420) {}
-				else {rocketship.right();}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			
+				rocketship.up = true;
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				rocketship.down = true;
+			
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		
+				rocketship.left = true;
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			
+				rocketship.right = true;
 			}
 		}
+	
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		rocketship.xspeed=0;
-		rocketship.yspeed=0;
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			
+			rocketship.up = false;
+	} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			rocketship.down = false;
+		
+	} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+	
+			rocketship.left = false;
+	} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+		
+			rocketship.right = false;
+		}
+	}
 
-	}
+
+
 	void loadImage(String imageFile) {
-	    if (needImage) {
-	        try {
-	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
-		    gotImage = true;
-	        } catch (Exception e) {
-	            
-	        }
-	        needImage = false;
-	    }
+		if (needImage) {
+			try {
+				image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+				gotImage = true;
+			} catch (Exception e) {
+
+			}
+			needImage = false;
+		}
 	}
+
 	void startGame() {
 		alienSpawn = new Timer(1000, manager);
-	    alienSpawn.start();
+		alienSpawn.start();
+		manager.score = 0;
 	}
 
 }

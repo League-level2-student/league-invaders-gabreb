@@ -9,9 +9,9 @@ public class ObjectManager implements ActionListener{
 	ArrayList<Projectile> PJ = new ArrayList<Projectile>();
 	ArrayList<Alien> Alien = new ArrayList<Alien>();
 	Random randy = new Random();
-	int score = 0;
-	int getScore() {
-		return this.score;
+	static int score = 0;
+	static int getScore() {
+		return score;
 	}
 	ObjectManager(Rocketship rocket) {
 		this.rocket = rocket;
@@ -29,14 +29,12 @@ public class ObjectManager implements ActionListener{
 		rocket.update();
 		for (Alien a : Alien) {
 			a.update();
-			System.out.println(a.y);
 			if (a.y > LeagueInvaders.HEIGHT) {
 				a.isActive = false;
 			}
 		}
 		for (Projectile p : PJ) {
 			p.update();
-			System.out.println(p.y);
 			if (p.y < 0) {
 				p.isActive = false;
 			}
