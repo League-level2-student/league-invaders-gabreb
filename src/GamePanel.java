@@ -195,7 +195,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void startGame() {
-		alienSpawn = new Timer(1000, manager);
+		alienSpawn = new Timer(200, manager);
 		alienSpawn.start();
 		manager.score = 0;
 	}
